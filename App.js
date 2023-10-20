@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, FlatList, StyleSheet, Image } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, FlatList, StyleSheet, Image, TextInput } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 export default function App() {
@@ -9,7 +9,7 @@ export default function App() {
       name: 'Spaghetti Carbonara',
       cuisine: 'Italian',
       fontWeight: 'bold',
-      price: 600,
+      price: 800,
       image: require('./assets/food/pic1.jpg'),
       description: 'Delicious pasta dish with creamy sauce and bacon.',
     },
@@ -17,7 +17,7 @@ export default function App() {
       id: '2',
       name: 'Sushi Rolls',
       cuisine: 'Japanese',
-      price: 15.49,
+      price: 400,
       image: require('./assets/food/pic2.jpg'),
       description: 'Fresh and tasty sushi rolls with various fillings.',
     },
@@ -46,7 +46,15 @@ export default function App() {
       description: 'Stir-fried noodles with shrimp and vegetables.',
     },
   ];
+ 
+  const [searchText, setSearchText] = useState(''); // State to store the search input
 
+  // Filter the menuItems based on the search text
+  const filteredMenuItems = menuItems.filter((item) =>
+    item.name.toLowerCase().includes(searchText.toLowerCase())
+  );
+  
+  
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -55,11 +63,25 @@ export default function App() {
         end={{ x: 1, y: 0 }}
         style={styles.header}
       >
+        
+          <Image
+          source={require('./assets/logo/logo1.png')} // Add your logo image path
+          style={styles.logo}
+        />
         <Text style={styles.headerText}>Food App</Text>
       </LinearGradient>
 
+       
+        
+      <TextInput
+        style={styles.searchInput}
+        placeholder="Search for dishes"
+        onChangeText={setSearchText}
+        value={searchText}
+      />
+
       <FlatList
-        data={menuItems}
+        data={filteredMenuItems}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <View style={styles.menuItem}>
@@ -73,6 +95,20 @@ export default function App() {
           </View>
         )}
       />
+      <View style={styles.footer}>
+        <Image
+          source={require('./assets/dilvery/dil1.jpg')}
+          style={styles.footerIcon}
+        />
+        <View style={styles.categoryContainer}>
+          <Text style={styles.category}>Categories</Text>
+        </View>
+        <Image
+          source={require('./assets/cart/cart1.png')}
+          style={styles.footerIcon}
+        />
+        
+      </View>
     </View>
   );
 }
@@ -80,21 +116,38 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'pink',
+    backgroundColor: 'white',
     padding: 20,
   },
   header: {
     padding: 15,
+  },
+  headerContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  logo: {
+    width:30, // Adjust the width of the logo
+    height:30, // Adjust the height of the logo
+    marginRight:50, // Add some margin between the logo and text
   },
   headerText: {
     fontSize: 24,
     fontWeight: 'bold',
     textAlign: 'center',
     color: 'black',
-    fontFamily: 'Sans-Serif',
     textShadowColor: 'rgba(0, 0, 0, 0.75',
     textShadowOffset: { width: -1, height: 1 },
     textShadowRadius: 10,
+    justifyContent: 'center'
+  },
+  
+  searchInput: {
+    backgroundColor: 'white',
+    padding: 10,
+    margin: 10,
+    borderRadius: 10,
   },
   menuItem: {
     flexDirection: 'row',
@@ -126,5 +179,28 @@ const styles = StyleSheet.create({
   itemDescription: {
     fontSize: 14,
     color: 'black',
+  },
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    padding: 10,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+  },
+  footerIcon: {
+    width: 30,
+    height: 30,
+  },
+  categoryContainer: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  category: {
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
